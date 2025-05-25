@@ -5,6 +5,7 @@ import playerComponents from './entities/player.entitiy';
 import { addComponents } from './utils/utils';
 import { Transform } from './components/transform.component';
 import { Sprite } from './components/sprite.component';
+import { Movement } from './components/movement.component';
 
 //------
 const canvas = document.getElementById('game') as HTMLCanvasElement;
@@ -21,14 +22,27 @@ canvas.height = innerHeight;
 
 export const world = ECS.addWorld();
 
+
+//------
+const BACKGROUND = ECS.addEntity(world)
+addComponents(BACKGROUND, [Transform, Sprite]);
+BACKGROUND.sprite.texture = new Image();
+BACKGROUND.sprite.texture.src = './src/typescript.svg';
+BACKGROUND.sprite.width =canvas.width;
+BACKGROUND.sprite.height = canvas.height;
+//------
+
+//------
 const PLAYER = ECS.addEntity(world)
-addComponents(PLAYER, [Transform , Sprite]);
+addComponents(PLAYER, [Transform , Sprite, Movement]);
 let texture = new Image();
 texture.src = './src/typescript.svg';
 PLAYER.sprite.texture = texture;
 PLAYER.sprite.width = 50;
 PLAYER.sprite.height = 50;
 //------
+
+
 ECS.addSystem(world, movementSystem);
 
 
@@ -46,9 +60,11 @@ const gameLoop = () => {
   for (const entity of ECS.getEntities(world, [ 'sprite' ])) {
    
       ctx.drawImage(
-        texture,
+        entity.sprite.texture,
         entity.transform.position.x - entity.sprite.offsetX,
-        entity.transform.position.y - entity.sprite.offsetY
+        entity.transform.position.y - entity.sprite.offsetY,
+        entity.sprite.width,
+        entity.sprite.height
       );
       entity.sprite.currentFrame = (entity.sprite.currentFrame + 1) % entity.sprite.frameCount;
     
