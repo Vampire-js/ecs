@@ -10,7 +10,7 @@ export const Sprite = {
         frameHeight: 0,
         frameCount: 1,
         currentFrame: 0,
-        animationSpeed: 1,
+        duration: 1,
         isAnimated: false
     }
 }
